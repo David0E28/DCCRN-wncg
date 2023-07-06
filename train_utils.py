@@ -11,31 +11,6 @@ import gc
 import sys
 import time
 
-
-def get_all_names(train_test, dns_home):
-    train_names = train_test["train"]
-    test_names = train_test["test"]
-
-    train_noisy_names = []
-    train_clean_names = []
-    test_noisy_names = []
-    test_clean_names = []
-
-    for name in train_names:
-        code = str(name).split('_')[-1]
-        clean_file = os.path.join(dns_home, 'clean', 'clean_fileid_%s' % code)
-        noisy_file = os.path.join(dns_home, 'noisy', name)
-        train_clean_names.append(clean_file)
-        train_noisy_names.append(noisy_file)
-    for name in test_names:
-        code = str(name).split('_')[-1]
-        clean_file = os.path.join(dns_home, 'clean', 'clean_fileid_%s' % code)
-        noisy_file = os.path.join(dns_home, 'noisy', name)
-        test_clean_names.append(clean_file)
-        test_noisy_names.append(noisy_file)
-    return train_noisy_names, train_clean_names, test_noisy_names, test_clean_names
-
-
 def test_epoch(model, test_iter, device, criterion, batch_size, test_all=False):
     model.eval()
     with torch.no_grad():
@@ -91,7 +66,7 @@ def train(model, optimizer, criterion, train_iter, test_iter, max_epoch, device,
                     optimizer.step()
                     loss_sum += loss.item()
                     i += 1
-            if step % int(len(train_iter) // 10) == 0 or step == len(train_iter) - 1:
+            if step == len(train_iter) - 1:
                 test_loss = test_epoch(model, test_iter, device, criterion, batch_size=batch_size, test_all=False)
                 print(
                     "epoch:%d,step:%d,train loss:%.5f,test loss:%.5f,time:%s" % (
@@ -105,7 +80,7 @@ def train(model, optimizer, criterion, train_iter, test_iter, max_epoch, device,
                 plt.savefig(os.path.join(log_path, "loss_time%s_epoch%d_step%d.png" % (
                     time.strftime("%Y-%m-%d %H-%M-%S", time.localtime()), epoch, step)), dpi=150)
                 plt.show()
-            if (step % int(len(train_iter) // 3) == 0 and step != 0) or step == len(train_iter) - 1:
+            if step == len(train_iter) - 1:
                 print("save model,epoch:%d,step:%d,time:%s" % (
                     epoch, step, time.strftime("%Y-%m-%d %H-%M-%S", time.localtime())))
                 torch.save(model, os.path.join(log_path, "parameter_epoch%d_%s.pth" % (
@@ -115,17 +90,3 @@ def train(model, optimizer, criterion, train_iter, test_iter, max_epoch, device,
                                 time.strftime("%Y-%m-%d %H-%M-%S", time.localtime()), epoch)), "wb"))
             if just_test:
                 break
-
-
-def get_train_test_name(dns_home):
-    all_name = []
-    for i in os.walk(os.path.join(dns_home, "noisy")):
-        for name in i[2]:
-            all_name.append(name)
-    train_names = all_name[:-len(all_name) // 5]
-    test_names = all_name[-len(all_name) // 5:]
-    print(len(train_names))
-    print(len(test_names))
-    data = {"train": train_names, "test": test_names}
-    pickle.dump(data, open("./train_test_names.data", "wb"))
-    return data
