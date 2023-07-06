@@ -4,7 +4,13 @@
 
 import torch
 import torch.nn.functional as F
-
+from torch.fft import irfft2
+from torch.fft import rfft2
+def rfft(x, d):
+    t = rfft2(x, dim=(-d))
+    return torch.stack((t.real, t.imag), -1)
+def irfft(x, d, signal_sizes):
+    return irfft2(torch.complex(x[:, :, 0], x[:, :, 1]), s=signal_sizes, dim=(-d))
 
 def istft(stft_matrix, hop_length=None, win_length=None, window='hann',
           center=True, normalized=False, onesided=True, length=None):
@@ -48,10 +54,9 @@ def istft(stft_matrix, hop_length=None, win_length=None, window='hann',
     for i in range(n_frames):
         sample = i * hop_length
         spec = stft_matrix[:, :, i]
-        print(spec.shape)
+        iffted = irfft(x=spec, d=1, signal_sizes=(win_length,))
+        print(iffted.shape)
         print(istft_window.shape)
-        iffted = torch.fft.irfft(spec,dim = 2 )
-
         ytmp = istft_window * iffted
         y[:, sample:(sample + n_fft)] += ytmp
 

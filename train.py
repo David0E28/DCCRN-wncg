@@ -2,7 +2,6 @@
 # Author：WangTianRui
 # Date ：2020/9/29 21:47
 from hparams import hparams
-from dataset import TIMIT_Dataset
 import wav_loader as loader
 import net_config as net_config
 import pickle

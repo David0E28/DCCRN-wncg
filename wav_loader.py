@@ -12,10 +12,10 @@ import torch
 def load_wav(path, frame_dur, sr=16000):
     signal, _ = lib.load(path, sr=sr)
     win = int(frame_dur / 1000 * sr)
-    phase = 10
+    phase = 20
+#    phase = len(signal) // win
     signal = signal[:phase * win]
-    array = torch.tensor(np.array_split(signal, phase, axis=0))
-    return array
+    return torch.tensor(np.array_split(signal, phase, axis=0))
 
 
 class WavDataset(Dataset):
