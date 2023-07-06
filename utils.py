@@ -55,8 +55,6 @@ def istft(stft_matrix, hop_length=None, win_length=None, window='hann',
         sample = i * hop_length
         spec = stft_matrix[:, :, i]
         iffted = irfft(x=spec, d=1, signal_sizes=(win_length,))
-        print(iffted.shape)
-        print(istft_window.shape)
         ytmp = istft_window * iffted
         y[:, sample:(sample + n_fft)] += ytmp
 
