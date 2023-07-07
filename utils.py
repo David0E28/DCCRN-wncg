@@ -1,6 +1,3 @@
-# coding: utf-8
-# Author：WangTianRui
-# Date ：2020/8/18 10:27
 
 import torch
 import torch.nn.functional as F

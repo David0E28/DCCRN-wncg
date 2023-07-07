@@ -1,14 +1,9 @@
-# coding: utf-8
-# Author：WangTianRui
-# Date ：2020/10/3 14:09
 import torch
 import matplotlib.pyplot as plt
 import numpy as np
 import pickle
 from pesq import pesq
 import os
-import gc
-import sys
 import time
 
 def test_epoch(model, test_iter, device, criterion, batch_size, test_all=False):
@@ -17,12 +12,17 @@ def test_epoch(model, test_iter, device, criterion, batch_size, test_all=False):
         loss_sum = 0
         i = 0
         for ind, (x, y) in enumerate(test_iter):
-            x = x.view(x.size(0) * x.size(1), x.size(2)).to(device).float()
-            y = y.view(y.size(0) * y.size(1), y.size(2)).to(device).float()
-            for index in range(0, x.size(0) - batch_size, batch_size):
+            # x = x.view(x.size(0) * x.size(1), x.size(2)).to(device).float()
+            # y = y.view(y.size(0) * y.size(1), y.size(2)).to(device).float()
+            x = x.to(device).float()
+            y = y.to(device).float()
+            range_end = x.size(0) - (x.size(0) % batch_size) - batch_size + 1
+            for index in range(0, range_end, batch_size):
                 x_item = x[index:index + batch_size, :].squeeze(0)
                 y_item = y[index:index + batch_size, :].squeeze(0)
                 y_p = model(x_item, train=False)
+                print(y_item.shape)
+                print(y_p.shape)
                 loss = criterion(source=y_item.unsqueeze(1), estimate_source=y_p)
                 loss_sum += loss.item()
                 i += 1
@@ -38,12 +38,15 @@ def train(model, optimizer, criterion, train_iter, test_iter, max_epoch, device,
         loss_sum = 0
         i = 0
         for step, (x, y) in enumerate(train_iter):
-            x = x.view(x.size(0) * x.size(1), x.size(2)).to(device).float()
-            y = y.view(y.size(0) * y.size(1), y.size(2)).to(device).float()
-            shuffle = torch.randperm(x.size(0))
-            x = x[shuffle]
-            y = y[shuffle]
-            for index in range(0, x.size(0) - batch_size + 1, batch_size):
+            # x = x.view(x.size(0) * x.size(1), x.size(2)).to(device).float()
+            # y = y.view(y.size(0) * y.size(1), y.size(2)).to(device).float()
+            x = x.to(device).float()
+            y = y.to(device).float()
+            # shuffle = torch.randperm(x.size(0))
+            # x = x[shuffle]
+            # y = y[shuffle]
+            range_end = x.size(0) - (x.size(0) % batch_size) - batch_size - 1
+            for index in range(0, range_end, batch_size):
                 model.train()
                 x_item = x[index:index + batch_size, :].squeeze(0)
                 y_item = y[index:index + batch_size, :].squeeze(0)
@@ -66,7 +69,7 @@ def train(model, optimizer, criterion, train_iter, test_iter, max_epoch, device,
                     optimizer.step()
                     loss_sum += loss.item()
                     i += 1
-            if step == len(train_iter) - 1:
+            if step % int(len(train_iter) // 10) == 0 or step == len(train_iter) - 1:
                 test_loss = test_epoch(model, test_iter, device, criterion, batch_size=batch_size, test_all=False)
                 print(
                     "epoch:%d,step:%d,train loss:%.5f,test loss:%.5f,time:%s" % (
@@ -90,3 +93,11 @@ def train(model, optimizer, criterion, train_iter, test_iter, max_epoch, device,
                                 time.strftime("%Y-%m-%d %H-%M-%S", time.localtime()), epoch)), "wb"))
             if just_test:
                 break
+
+
+def my_collect(batch):
+    batch_X = [item[0] for item in batch]
+    batch_Y = [item[1] for item in batch]
+    batch_X = torch.cat(batch_X,0)
+    batch_Y = torch.cat(batch_Y,0)
+    return[batch_X.float(), batch_Y.float()]

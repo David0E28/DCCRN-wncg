@@ -1,6 +1,4 @@
-# coding: utf-8
-# Author：WangTianRui
-# Date ：2020/10/2 14:50
+
 import torch
 
 

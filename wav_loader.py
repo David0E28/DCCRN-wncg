@@ -1,7 +1,3 @@
-# coding: utf-8
-# Author：WangTianRui
-# Date ：2020/9/29 11:03
-
 from torch.utils.data import Dataset, DataLoader
 import librosa as lib
 import os
@@ -12,8 +8,8 @@ import torch
 def load_wav(path, frame_dur, sr=16000):
     signal, _ = lib.load(path, sr=sr)
     win = int(frame_dur / 1000 * sr)
-    phase = 20
-#    phase = len(signal) // win
+    # phase = 20
+    phase = len(signal) // win
     signal = signal[:phase * win]
     return torch.tensor(np.array_split(signal, phase, axis=0))
 

@@ -1,13 +1,7 @@
-# coding: utf-8
-# Author：WangTianRui
-# Date ：2020/9/30 10:55
-
 
 from complex_progress import *
 import torchaudio_contrib as audio_nn
 from utils import *
-
-
 class STFT(nn.Module):
     def __init__(self, n_fft, hop_length, win_length):
         super().__init__()

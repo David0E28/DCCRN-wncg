@@ -1,6 +1,3 @@
-# coding: utf-8
-# Author：WangTianRui
-# Date ：2020/8/18 9:43
 
 import torch
 import torch.nn as nn
