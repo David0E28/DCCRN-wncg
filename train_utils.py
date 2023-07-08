@@ -16,7 +16,7 @@ def test_epoch(model, test_iter, device, criterion, batch_size, test_all=False):
             # y = y.view(y.size(0) * y.size(1), y.size(2)).to(device).float()
             x = x.to(device).float()
             y = y.to(device).float()
-            range_end = x.size(0) - (x.size(0) % batch_size) - batch_size + 1
+            range_end = x.size(0) - (x.size(0) % batch_size) - batch_size - 1
             for index in range(0, range_end, batch_size):
                 x_item = x[index:index + batch_size, :].squeeze(0)
                 y_item = y[index:index + batch_size, :].squeeze(0)
