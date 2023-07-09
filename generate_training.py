@@ -26,12 +26,12 @@ if __name__ == "__main__":
     noise_path = 'A:/WORK/project/VOICE_DATA/TIMIT/noise'
     # noises = ['babble', 'buccaneer1', 'destroy','factory1','volvo','white']
     noises = ['babble', ]
-    clean_files = np.loadtxt('M:/DCCRN/scp/train.scp', dtype='str').tolist()
-    path_noisy = 'A:/WORK/project/VOICE_DATA/TIMIT/noisy'
+    clean_files = np.loadtxt('M:/DCCRN/scp/test.scp', dtype='str').tolist()
+    path_noisy = 'A:/WORK/project/VOICE_DATA/TIMIT/noisy/TEST'
 
-    snrs = [-5, 0, 5]
+    snrs = [0]
 
-    with open('M:/DCCRN/scp/train_DNN_enh.scp', 'w+') as f:
+    with open('M:/DCCRN/scp/test_DNN_enh.scp', 'w+') as f:
 
         for noise in noises:
             print(noise)
@@ -41,9 +41,10 @@ if __name__ == "__main__":
             for clean_file in clean_files:
                 clean_path, clean_wav = os.path.split(clean_file)
                 clean_data, fs = sf.read(clean_file, dtype='int16')
-
+                path_clean_path, path_floder1 = os.path.split(clean_path)
+                path_path_clean_path, path_floder2 = os.path.split(path_clean_path)
                 for snr in snrs:
-                    noisy_file = os.path.join(path_noisy, noise, str(snr), clean_wav)
+                    noisy_file = os.path.join(path_noisy, path_floder2, path_floder1,  noise, str(snr), clean_wav)
 
                     noisy_path, _ = os.path.split(noisy_file)
                     os.makedirs(noisy_path, exist_ok=True)

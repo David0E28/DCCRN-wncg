@@ -30,10 +30,11 @@ def test_epoch(model, test_iter, device, criterion, batch_size, test_all=False):
                 x_item = x[index:index + batch_size, :].squeeze(0)
                 y_item = y[index:index + batch_size, :].squeeze(0)
                 y_p = model(x_item, train=False)
-                if index % 3999 == 0:
-                    plt.plot(y_p.flatten().to("cpu").numpy())
-                    plt.plot(x_item.flatten().to("cpu").numpy())
-                    plt.show()
+                #cpu memory will not auto free!!!!!
+                # if index % 3999 == 0:
+                    # plt.plot(y_item.flatten().to("cpu").numpy())
+                    # plt.plot(x_item.flatten().to("cpu").numpy())
+                    # plt.show()
                     # print("增强前", pesq(16000, y_item.flatten().to("cpu").numpy(), x_item.flatten().to("cpu").numpy(),  "nb"))
                     # print('增强后', pesq(16000, y_item.flatten().to("cpu").numpy(), y_p.squeeze(1).flatten().to("cpu").numpy(),  "nb"))
                 loss = criterion(source=y_item.unsqueeze(1), estimate_source=y_p)
