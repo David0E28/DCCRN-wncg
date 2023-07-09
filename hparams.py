@@ -98,6 +98,7 @@ def get_net_params():
 class hparams():
     def __init__(self):
         self.file_scp = "scp/train_DNN_enh.scp"
+        self.file_scp_test = "scp/test_DNN_enh.scp"
         self.device = "cuda"
         self.para_stft = {}
         self.para_stft["N_fft"] = 512
@@ -113,4 +114,5 @@ class hparams():
         self.batch_size = 400
         self.load_batch = 100
         self.negative_slope = 1e-4
+
         
