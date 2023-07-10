@@ -99,13 +99,16 @@ class hparams():
     def __init__(self):
         self.file_scp = "scp/train_DNN_enh.scp"
         self.file_scp_test = "scp/test_DNN_enh.scp"
+        self.checkpoint = True
+        self.lastModelPath = "M:\DCCRN\logs\parameter_epoch11_2023-07-10 00-56-55.pth"
+
         self.device = "cuda:0"
         self.para_stft = {}
         self.para_stft["N_fft"] = 512
         self.para_stft["win_length"] = 400
         self.para_stft["hop_length"] = 100
         self.para_stft["window"] = 'hamming'
-       
+
         self.n_expand = 3
         self.dim_in = int((self.para_stft["N_fft"] / 2 + 1)*(2 * self.n_expand+1))
         self.dim_out = int((self.para_stft["N_fft"] / 2 + 1))
