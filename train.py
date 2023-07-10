@@ -24,4 +24,4 @@ dccrn = m_model.to(para.device)
 optimizer = torch.optim.Adam(dccrn.parameters(), para.learning_rate)
 criterion = SiSnr()
 train(model=dccrn, optimizer=optimizer, criterion=criterion, train_iter=train_dataloader, test_iter=test_dataloader,
-      max_epoch=30, device=para.device, batch_size=para.batch_size, log_path=save_file, just_test=False)
+      max_epoch=40, device=para.device, batch_size=para.batch_size, log_path=save_file, just_test=False)

@@ -99,7 +99,7 @@ class hparams():
     def __init__(self):
         self.file_scp = "scp/train_DNN_enh.scp"
         self.file_scp_test = "scp/test_DNN_enh.scp"
-        self.device = "cuda"
+        self.device = "cuda:0"
         self.para_stft = {}
         self.para_stft["N_fft"] = 512
         self.para_stft["win_length"] = 400

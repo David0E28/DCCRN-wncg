@@ -16,6 +16,7 @@ def pesq_fn(y_truth, y_valid):
 
 
 def test_epoch(model, test_iter, device, criterion, batch_size, test_all=False):
+    model = model.to(device)
     model.eval()
     with torch.no_grad():
         loss_sum = 0
@@ -37,7 +38,7 @@ def test_epoch(model, test_iter, device, criterion, batch_size, test_all=False):
                     # plt.show()
                     # print("增强前", pesq(16000, y_item.flatten().to("cpu").numpy(), x_item.flatten().to("cpu").numpy(),  "nb"))
                     # print('增强后', pesq(16000, y_item.flatten().to("cpu").numpy(), y_p.squeeze(1).flatten().to("cpu").numpy(),  "nb"))
-                loss = criterion(source=y_item.unsqueeze(1), estimate_source=y_p)
+                loss = criterion(source=y_item.unsqueeze(1), estimate_source=y_p).to(device)
                 loss_sum += loss.item()
                 i += 1
             if not test_all:
@@ -56,17 +57,20 @@ def train(model, optimizer, criterion, train_iter, test_iter, max_epoch, device,
             # y = y.view(y.size(0) * y.size(1), y.size(2)).to(device).float()
             x = x.to(device).float()
             y = y.to(device).float()
-            # shuffle = torch.randperm(x.size(0))
-            # x = x[shuffle]
-            # y = y[shuffle]
+            shuffle = torch.randperm(x.size(0))
+            x = x[shuffle]
+            y = y[shuffle]
             range_end = x.size(0) - (x.size(0) % batch_size) - batch_size - 1
             for index in range(0, range_end, batch_size):
+
+                model = model.to(device)
                 model.train()
+
                 x_item = x[index:index + batch_size, :].squeeze(0)
                 y_item = y[index:index + batch_size, :].squeeze(0)
                 optimizer.zero_grad()
                 y_p = model(x_item)
-                loss = criterion(source=y_item.unsqueeze(1), estimate_source=y_p)
+                loss = criterion(source=y_item.unsqueeze(1), estimate_source=y_p).to(device)
                 if step == 0 and index == 0 and epoch == 0:
                     loss.backward()
                     loss_sum += loss.item()
