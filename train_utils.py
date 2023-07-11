@@ -57,9 +57,9 @@ def train(model, optimizer, criterion, train_iter, test_iter, max_epoch, device,
             # y = y.view(y.size(0) * y.size(1), y.size(2)).to(device).float()
             x = x.to(device).float()
             y = y.to(device).float()
-            shuffle = torch.randperm(x.size(0))
-            x = x[shuffle]
-            y = y[shuffle]
+            # shuffle = torch.randperm(x.size(0))
+            # x = x[shuffle]
+            # y = y[shuffle]
             range_end = x.size(0) - (x.size(0) % batch_size) - batch_size - 1
             for index in range(0, range_end, batch_size):
 

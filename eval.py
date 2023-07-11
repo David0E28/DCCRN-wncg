@@ -14,7 +14,7 @@ para = hparams()
 
 test_dataset = loader.WavDataset(para.file_scp_test, frame_dur=37.5)
 
-PATH_model = "M:\DCCRN\logs\parameter_epoch11_2023-07-10 00-56-55.pth"
+PATH_model = "M:\DCCRN\logs\parameter_epoch8_2023-07-10 00-17-01.pth"
 
 test_dataset = loader.WavDataset(para.file_scp_test, frame_dur=37.5)
 test_dataloader = DataLoader(test_dataset, batch_size=para.load_batch, shuffle=True, collate_fn=my_collect)

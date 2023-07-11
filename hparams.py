@@ -99,8 +99,9 @@ class hparams():
     def __init__(self):
         self.file_scp = "scp/train_DNN_enh.scp"
         self.file_scp_test = "scp/test_DNN_enh.scp"
+
         self.checkpoint = True
-        self.lastModelPath = "M:\DCCRN\logs\parameter_epoch11_2023-07-10 00-56-55.pth"
+        self.lastModelPath = "M:\DCCRN\logs\parameter_epoch8_2023-07-10 00-17-01.pth"
 
         self.device = "cuda:0"
         self.para_stft = {}
