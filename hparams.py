@@ -101,7 +101,7 @@ class hparams():
         self.file_scp_test = "scp/test_DNN_enh.scp"
 
         self.checkpoint = True
-        self.lastModelPath = "M:\DCCRN\logs\parameter_epoch8_2023-07-10 00-17-01.pth"
+        self.lastModelPath = "M:\DCCRN\logs\parameter_epoch8_2023-07-11 22-49-24.pth"
 
         self.device = "cuda:0"
         self.para_stft = {}

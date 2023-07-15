@@ -18,11 +18,11 @@ train_dataloader = DataLoader(train_dataset, batch_size=para.load_batch, shuffle
 test_dataloader = DataLoader(test_dataset, batch_size=para.load_batch, shuffle=True, collate_fn=my_collect)
 
 if para.checkpoint:
-    m_model = torch.load(para.lastModelPath).to(para.device)
+    m_model = torch.load(para.lastModelPath)
 else:
     m_model = model_cov_bn.DCCRN_(n_fft=para.para_stft["N_fft"], hop_len=para.para_stft["hop_length"],
                               net_params=get_net_params(), batch_size=para.batch_size, device=para.device,
-                              win_length=para.para_stft["win_length"]).to(para.device)
+                              win_length=para.para_stft["win_length"])
 dccrn = m_model.to(para.device)
 optimizer = torch.optim.Adam(dccrn.parameters(), para.learning_rate)
 criterion = SiSnr()
